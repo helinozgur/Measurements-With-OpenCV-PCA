@@ -1,6 +1,6 @@
 import cv2 as cv
 import numpy as np
-from medium_functions import Functions
+from functions import Functions
 from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
