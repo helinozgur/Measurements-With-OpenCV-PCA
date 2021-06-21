@@ -122,9 +122,10 @@ class Functions:
         print("beyaz piksel saısı:", (bw.shape[0] * bw.shape[1]) - (cv.countNonZero(bw)))
         ##Threshold uygulanmış resimdeki konturleri buluyoruz
         contours, _ = cv.findContours(bw, cv.RETR_TREE, cv.CHAIN_APPROX_NONE)
+        area_max = max(contours[1:], key=cv.contourArea)
         for idx, c in enumerate(contours[1:]):
             #Küçük konturleri eliyoruz
-            if cv.contourArea(c) < src.shape[0] // 2:
+            if cv.contourArea(c) < cv.contourArea(area_max):
                 continue
             #Konturleri çizmek için boş bir maske tanımlıyoruz ve konturleri maskeye çiziyoruz
             img1 = np.zeros(gray.shape, np.uint8)
