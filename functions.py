@@ -17,9 +17,6 @@ class Functions:
         self.th_max = 255
 
     def drawAxis(self, img, p_, q_, colour, scale):
-        start = time.time()
-        logging.basicConfig(level=logging.INFO)
-        logging.info('drawAxis Function Started!')
 
         p = list(p_)
         q = list(q_)
@@ -29,15 +26,9 @@ class Functions:
         q[0] = p[0] - scale * hypotenuse * cos(angle)
         q[1] = p[1] - scale * hypotenuse * sin(angle)
         line = cv.line(img, (int(p[0]), int(p[1])), (int(q[0]), int(q[1])), colour, 8, -1)
-        end = time.time()
-        logging.basicConfig(level=logging.INFO)
-        logging.info('drawAxis Function Stoped!' + '  Time elapsed:' + str((end - start)))
         return line, angle
 
     def getOrientation(self, pts, img):
-        start = time.time()
-        logging.basicConfig(level=logging.INFO)
-        logging.info('getOrientation Function Staered!')
         #PCA analizi tarafından kullanılacak bir arabellek oluşturuyoruz
         size = len(pts)
         data_pts = np.empty((size, 2), dtype=np.float64)
@@ -70,10 +61,6 @@ class Functions:
             h2, _ = self.drawAxis(w1, cntr, h, self.yesil, -1)
             w2, _ = self.drawAxis(h2, cntr, w, self.sari, -1)
             angle = atan2(eigenvectors[0, 1], eigenvectors[0, 0])  # orientation in radians
-
-            end = time.time()
-            logging.basicConfig(level=logging.INFO)
-            logging.info('GetOriantation Function Stoped!' + '  Time elapsed:' + str((end - start)))
             return angle, w2
         ##2 derinlikli görsel için aşağıdaki işlemi uyguluyoruz
         elif len(img.shape) == 2:
@@ -82,15 +69,9 @@ class Functions:
             h2, _ = self.drawAxis(h1, cntr, h, (255), -1)
             w2, angle_w = self.drawAxis(w1, cntr, w, (255), -1)
             angle = atan2(eigenvectors[0, 1], eigenvectors[0, 0])  # orientation in radians
-            end = time.time()
-            logging.basicConfig(level=logging.INFO)
-            logging.info('GetOriantation Function Stoped!' + '  Time elapsed:' + str((end - start)))
             return angle, w2, h2, cntr, angle_w
 
     def getCoordinates(self, contour, w_or_h):
-        start = time.time()
-        logging.basicConfig(level=logging.INFO)
-        logging.info('getCoordinates Function Started!')
         #Konturle çizgilerin kesiştiği noktaları buluyoruz ve arrayler içine atıyoruz
         np_where = np.where(contour & w_or_h == [255])
         array_0, array_1 = np_where[0], np_where[1]
@@ -100,9 +81,6 @@ class Functions:
         length = cv.norm(np.array(second_coor) - np.array(first_coor))
         #linee = cv.line(contour, (second_coor[0], second_coor[1]), (first_coor[0], first_coor[1]), (255, 255, 255), 1,
         #                cv.LINE_AA)
-        end = time.time()
-        logging.basicConfig(level=logging.INFO)
-        logging.info('GetCoordinates Function Stoped!' + '  Time elapsed:' + str((end - start)))
         return second_coor, first_coor, length
 
     def midpoint(self, ptA, ptB):
@@ -110,9 +88,6 @@ class Functions:
 
     def calculateWidhtHeight(self, src):
         result_liste = []
-        start = time.time()
-        logging.basicConfig(level=logging.INFO)
-        logging.info('calculateWidhtHeight Function Started!')
         global contour_screw, length_w, length_h, angle_line, result
         # Görseli grayscale hale getiriyoruz
         blur = cv.blur(src, ((int(src.shape[0] / 100)), (int(src.shape[1] / 100))))
@@ -156,7 +131,4 @@ class Functions:
             # btw_or2 = cv.bitwise_or(btw_or, btw_or2)
             result = btw_or
             result_liste.append((idx + 1, (xx1, yy1), length_w, length_h))
-        end = time.time()
-        logging.basicConfig(level=logging.INFO)
-        logging.info(' calculateWidhtHeight Function Stoped!' + '  Time elapsed:' + str((end - start)))
         return result, result_liste
